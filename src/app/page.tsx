@@ -1,12 +1,14 @@
-import CryptoList from "@/components/Cryptolist";
+import { redirect } from "next/navigation";
+import { getServerSession } from "next-auth";
+import Dashboard from "@/components/pages/Dashboard";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 
-const HomePage = () => {
-  return (
-    <div className="p-4 bg-white text-black dark:bg-gray-900 dark:text-white">
-      <h1 className="text-2xl font-bold">CoinSightDev</h1>
-      <CryptoList />
-    </div>
-  );
-};
+export default async function HomePage() {
+  const session = await getServerSession(authOptions);
 
-export default HomePage;
+  if (!session) {
+    redirect("/auth/signin");
+  }
+
+  return <Dashboard />;
+}
